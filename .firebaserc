@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "five-minute-math"
-  }
+    "default": "five-minute-math",
+    "staging": "mm5-staging"
+  },
+  "targets": {}
 }

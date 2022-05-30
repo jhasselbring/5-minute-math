@@ -1,5 +1,8 @@
 <template>
-  <button class="starter" v-if="state.status == 0" @click="start">START</button>
+  <div v-if="state.status == 0">
+    v0.2.1
+    <button class="starter" @click="start">START</button>
+  </div>
   <div id="container" v-else-if="state.status == 1">
     <div id="header">
       <div id="timer-left">
@@ -60,6 +63,7 @@ let state = reactive({
   old3: "",
   old2: "",
   old1: "",
+  lastAnswer: 0,
 });
 function start() {
   state.status = 1;
@@ -71,7 +75,10 @@ function start() {
   const countDownFx = function () {
     if (state.timeLeft > 0) {
       state.timeLeft--;
+      state.lastAnswer++;
+
       console.log(state.timeLeft);
+      stresser();
       clearTimeout(countDownId);
       countDownId = setTimeout(countDownFx, 1000);
     } else {
@@ -89,7 +96,7 @@ function maxMin() {
   return Math.floor(Math.random() * (state.max - state.min) + state.min);
 }
 function generateQuestion() {
-  var easyOrHard = Math.random() < 0.1;
+  var easyOrHard = Math.random() < 0.01;
   console.log(easyOrHard);
   let firstNum = maxMin();
   let firstRule = Math.random() < 0.5 ? "+" : "-";
@@ -113,6 +120,7 @@ function getSeconds() {
   return secondsLeft < 10 ? `0${secondsLeft}` : secondsLeft;
 }
 function submit() {
+  state.lastAnswer = 0;
   console.log("submitted");
   if (state.answer == eval(state.problem)) {
     state.score = state.score + 1;
@@ -129,7 +137,11 @@ function submit() {
     state.old4 = state.old3;
     state.old3 = state.old2;
     state.old2 = state.old1;
-    state.old1 = `<div style="padding:2px;background-color: rgba(255,255,0,0.2)">${state.problem} = ❌<span style="color:yellow">Skipped</span> <span style="color:green">✔${eval(state.problem)}</span></div>`;
+    state.old1 = `<div style="padding:2px;background-color: rgba(255,255,0,0.2)">${
+      state.problem
+    } = ❌<span style="color:yellow">Skipped</span> <span style="color:green">✔${eval(
+      state.problem
+    )}</span></div>`;
     let audio = new Audio("/audio/next.mp3");
     audio.play();
   } else {
@@ -138,13 +150,27 @@ function submit() {
     state.old4 = state.old3;
     state.old3 = state.old2;
     state.old2 = state.old1;
-    state.old1 = `<div style="padding:2px;background-color: rgba(255,0,0,0.2)">${state.problem} = <span style="color:red">❌${state.answer}</span> <span style="color:green">✔${eval(state.problem)}</span></div>`;
+    state.old1 = `<div style="padding:2px;background-color: rgba(255,0,0,0.2)">${
+      state.problem
+    } = <span style="color:red">❌${
+      state.answer
+    }</span> <span style="color:green">✔${eval(state.problem)}</span></div>`;
     let audio = new Audio("/audio/buzz.mp3");
     audio.play();
   }
   generateQuestion();
   state.answer = null;
   document.getElementById("answer-field").focus();
+}
+function stresser() {
+  console.log("Stress", state.lastAnswer);
+  if (state.lastAnswer > 5 && state.lastAnswer <= 10) {
+    let audio = new Audio("/audio/beep.mp3");
+    audio.play();
+  } else if (state.lastAnswer > 10) {
+    let audio = new Audio("/audio/beep-beep.mp3");
+    audio.play();
+  }
 }
 </script>
 
@@ -162,6 +188,9 @@ html {
       width: calc(100% - 30px);
       font-size: 32px;
       cursor: pointer;
+      background-color: #090;
+      color: #fff;
+      border-radius: 5px;
     }
     #container {
       #header {
@@ -196,7 +225,8 @@ html {
       #submit {
         width: 100%;
         cursor: pointer;
-        padding: 10px;
+        padding: 15px 0;
+        line-height: 40px;
       }
     }
     #done {

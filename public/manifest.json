@@ -1,0 +1,32 @@
+{
+    "name": "Daniel James' 5 Minute Math",
+    "short_name": "5MM",
+    "theme_color": "#090",
+    "icons": [
+        {
+            "src": "./img/icons/196.png",
+            "sizes": "196x196",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/icons/512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/icons/196.png",
+            "sizes": "196x196",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "./img/icons/512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#090"
+}
